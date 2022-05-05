@@ -18,23 +18,19 @@ const StockList = () => {
       }
     })
     if (node) observer.current.observe(node)
-    console.log(node)
+    // console.log(node)
   }, [loading, hasMore])
 
   const stockList = stocks.map((stock, index) => {
     if (stocks.length === index + 1) {
       return (
-        <div ref={lastStockElement} className='block' key={stock.id}>
+        <div ref={lastStockElement} key={index}>
           <h1>{stock.id}{stock.name} </h1>
         </div>
       )
     }
     else {
-      return (
-        <div className='block' key={stock.id}>
-          <h1>{stock.id}{stock.name} </h1>
-        </div>
-      )
+      return <div className='block' key={index}> <h1>{stock.id}{stock.name}</h1></div>
     }
   })
 

@@ -6,24 +6,36 @@ const useStockPaginate = (pageNumber) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const [hasMore, setHasMore] = useState(false)
+  // const [hasMore, setHasMore] = useState(true)
+
 
   useEffect(() => {
     setLoading(true)
     setError(false)
-    axios.get(`http://localhost:4001/stocks/list/page/${pageNumber}`)
-      .then(response => {
-        setStocks(prevStocks => {
-          return [...new Set([...prevStocks, ...response.data])]
+
+    const makeAPICall = async () => {
+      await axios.get(`http://localhost:4001/stocks/list/page/${pageNumber}`)
+        .then(response => {
+          setStocks(prevStocks => {
+            if (prevStocks.length && prevStocks[0].id === response.data.stocks[0].id) {
+              return prevStocks
+            }
+            else {
+              return [...new Set([...prevStocks, ...response.data.stocks])]
+            }
+          })
+          setHasMore(response.data.stocks.length === 10)
+          setLoading(false)
+
+        }).catch(error => {
+          console.log(error)
+          if (axios.isCancel(error)) return
+          setError(error)
         })
-        console.log(response.data)
-        setHasMore(response.data.length === 10)
-        setLoading(false)
-      }).catch(error => {
-        console.log(error)
-        setError(error)
-      })
-    return () => { }
+    }
+    makeAPICall()
   }, [pageNumber])
+
   return { stocks, loading, error, hasMore }
 }
 
