@@ -6,7 +6,6 @@ const useStockPaginate = (pageNumber) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const [hasMore, setHasMore] = useState(false)
-  // const [hasMore, setHasMore] = useState(true)
 
 
   useEffect(() => {
@@ -17,14 +16,14 @@ const useStockPaginate = (pageNumber) => {
       await axios.get(`http://localhost:4001/stocks/list/page/${pageNumber}`)
         .then(response => {
           setStocks(prevStocks => {
-            if (prevStocks.length && prevStocks[0].id === response.data.stocks[0].id) {
+            if (prevStocks.length && response.data.stocks.length && prevStocks[0].id === response.data.stocks[0].id) {
               return prevStocks
             }
             else {
               return [...new Set([...prevStocks, ...response.data.stocks])]
             }
           })
-          setHasMore(response.data.stocks.length === 10)
+          setHasMore(response.data.stocks.length > 0)
           setLoading(false)
 
         }).catch(error => {

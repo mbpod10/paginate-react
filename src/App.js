@@ -2,7 +2,7 @@ import React from 'react';
 
 import './App.css';
 import TitleList from './components/TitleList';
-import StockList from './stocks/StockList';
+import StockList from './InfiniteScroll/StockList';
 
 
 function App() {
